@@ -1,0 +1,55 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+
+% Layer colors
+\def\InputColor{rgb:yellow,2;blue,1;white,7}
+\def\LSTMColor{rgb:blue,5;green,2.5;white,5}
+\def\DenseColor{rgb:magenta,5;black,7}
+\def\NormColor{rgb:green,4;blue,1;white,6}
+\def\DropoutColor{rgb:cyan,5;black,4}
+\def\RepeatColor{rgb:orange,4;yellow,3;white,6}
+\def\OutputColor{rgb:red,3;blue,1;white,6}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{flow}=[ultra thick,->,draw=\edgecolor]
+
+% Inputs
+\node[canvas is zy plane at x=0,draw,minimum width=4.6cm,minimum height=1.6cm,align=center]
+    (enc_input) at (-5,3,0) {Encoder Input\\\texttt{(n\_steps\_in, n\_features\_enc)}};
+\node[above=0.45cm of enc_input] {\texttt{enc}};
+
+% Encoder stack
+\pic[shift={(2.2,0,0)}] at (enc_input) {Box={name=lstm,caption=LSTM,%
+    xlabel={{"LSTM_UNITS"}},zlabel=vector,fill=\LSTMColor,height=15,width=3,depth=20}};
+
+\pic[shift={(1.8,0,0)}] at (lstm-east) {Box={name=dense,caption=Dense+ReLU,%
+    xlabel={{"DENSE_UNITS"}},fill=\DenseColor,height=13,width=2,depth=16}};
+
+\pic[shift={(1.6,0,0)}] at (dense-east) {Box={name=lnorm,caption=LayerNorm,%
+    xlabel={{"norm"}},fill=\NormColor,height=11,width=2,depth=14}};
+
+\pic[shift={(1.6,0,0)}] at (lnorm-east) {Box={name=drop,caption=Dropout,%
+    xlabel={{"DROPOUT"}},fill=\DropoutColor,height=10,width=2,depth=12}};
+
+% Lightweight decoder
+\pic[shift={(1.8,0,0)}] at (drop-east) {Box={name=repeat,caption=RepeatVector,%
+    xlabel={{"n\_steps\_out"}},fill=\RepeatColor,height=10,width=2,depth=20}};
+
+\pic[shift={(2.2,0,0)}] at (repeat-east) {Box={name=tdout,caption=TimeDistributed Dense,%
+    xlabel={{"n\_targets"}},zlabel=n\_steps\_out,fill=\OutputColor,height=12,width=2,depth=20}};
+\node[at={(tdout-north)},yshift=0.45cm] {\texttt{output}};
+
+% Main flow
+\draw[flow] (enc_input) -- (lstm-west);
+\draw[flow] (lstm-east) -- (dense-west);
+\draw[flow] (dense-east) -- (lnorm-west);
+\draw[flow] (lnorm-east) -- (drop-west);
+\draw[flow] (drop-east) -- (repeat-west);
+\draw[flow] (repeat-east) -- (tdout-west);
+
+\end{tikzpicture}
+\end{document}
