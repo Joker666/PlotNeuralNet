@@ -1,0 +1,84 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+\usepackage{import}
+\subimport{./layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+
+% Define colors for layers
+\def\GRUColor{rgb:blue,5;green,2.5;white,5}
+\def\DropoutColor{rgb:cyan,5;black,3}
+\def\DenseColor{rgb:magenta,5;black,7}
+\def\SoftmaxColor{rgb:orange,5;black,5}
+\def\ConcatColor{rgb:yellow,5;green,2;white,5}
+
+\begin{document}
+\begin{tikzpicture}
+
+    % Skeleton Input Layer
+    \node[canvas is zy plane at x=0] (skeleton_input) at (-4,4,0) {\includegraphics[width=4cm,height=1.5cm]{}};
+    \node[above=0.5cm of skeleton_input] {Skeleton Input};
+
+    % Skeleton GRU Branch
+    \pic[shift={(1.5,0,0)}] at (skeleton_input) {Box={name=gru1_skeleton,caption=GRU,%
+                xlabel={{``128''}},zlabel=Seq,fill=\GRUColor,%
+                height=15,width=2,depth=30}};
+    \pic[shift={(2,0,0)}] at (gru1_skeleton-east) {Box={name=gru2_skeleton,caption=GRU,%
+                xlabel={{``256''}},fill=\GRUColor,%
+                height=15,width=2,depth=25}};
+
+    % Inertial Input Layer
+    \node[canvas is zy plane at x=0] (inertial_input) at (-4,-4,0) {\includegraphics[width=4cm,height=1.5cm]{}};
+    \node[below=0.5cm of inertial_input] {Inertial Input};
+
+    % Inertial GRU Branch
+    \pic[shift={(1.5,0,0)}] at (inertial_input) {Box={name=gru1_inertial,caption=GRU,%
+                xlabel={{``128''}},zlabel=Seq,fill=\GRUColor,%
+                height=15,width=2,depth=30}};
+    \pic[shift={(2,0,0)}] at (gru1_inertial-east) {Box={name=gru2_inertial,caption=GRU,%
+                xlabel={{``256''}},fill=\GRUColor,%
+                height=15,width=2,depth=25}};
+
+    % Concatenation Layer
+    \pic[shift={(2.5,0,0)}] at (gru2_skeleton-east) {Box={name=concat,caption=Concatenate,%
+                xlabel={{``512''}},fill=\ConcatColor,%
+                height=20,width=2,depth=20}};
+
+    % Dense Layers with Dropout
+    \pic[shift={(2,0,0)}] at (concat-east) {Box={name=dense1,caption=Dense,%
+                xlabel={{``256''}},fill=\DenseColor,%
+                height=15,width=2,depth=15}};
+    \pic[shift={(1.5,0,0)}] at (dense1-east) {Box={name=dropout1,caption=Dropout,%
+                xlabel={{``0.5''}},fill=\DropoutColor,%
+                height=12,width=2,depth=12}};
+    \pic[shift={(1.5,0,0)}] at (dropout1-east) {Box={name=dense2,caption=Dense,%
+                xlabel={{``128''}},fill=\DenseColor,%
+                height=10,width=2,depth=10}};
+    \pic[shift={(1.5,0,0)}] at (dense2-east) {Box={name=dropout2,caption=Dropout,%
+                xlabel={{``0.5''}},fill=\DropoutColor,%
+                height=8,width=2,depth=8}};
+
+    % Softmax Output Layer
+    \pic[shift={(1.5,0,0)}] at (dropout2-east) {Box={name=softmax,caption=Softmax,%
+                xlabel={{``Classes''}},fill=\SoftmaxColor,%
+                height=8,width=2,depth=8}};
+
+    % Draw connections
+    % Skeleton branch
+    \draw [ultra thick,->] (skeleton_input) -- (gru1_skeleton-west);
+    \draw [ultra thick,->] (gru1_skeleton-east) -- (gru2_skeleton-west);
+    \draw [ultra thick,->] (gru2_skeleton-east) -- (concat-west);
+
+    % Inertial branch
+    \draw [ultra thick,->] (inertial_input) -- (gru1_inertial-west);
+    \draw [ultra thick,->] (gru1_inertial-east) -- (gru2_inertial-west);
+    \draw [ultra thick,->] (gru2_inertial-east) -| (concat-south);
+
+    % Post-concatenation
+    \draw [ultra thick,->] (concat-east) -- (dense1-west);
+    \draw [ultra thick,->] (dense1-east) -- (dropout1-west);
+    \draw [ultra thick,->] (dropout1-east) -- (dense2-west);
+    \draw [ultra thick,->] (dense2-east) -- (dropout2-west);
+    \draw [ultra thick,->] (dropout2-east) -- (softmax-west);
+
+\end{tikzpicture}
+\end{document}
