@@ -3,6 +3,7 @@
 \subimport{../../layers/}{init}
 \usetikzlibrary{positioning}
 \usetikzlibrary{3d}
+\usetikzlibrary{fit}
 
 % Layer colors
 \def\InputColor{rgb:yellow,2;blue,1;white,7}
@@ -18,6 +19,7 @@
 \tikzstyle{flow}=[ultra thick,->,draw=\edgecolor]
 \tikzstyle{stageflow}=[thick,->,draw=black]
 \tikzstyle{stagebox}=[draw=black,rounded corners=2pt,fill=white,text centered,text width=2.6cm,minimum height=8mm]
+\tikzstyle{groupbox}=[draw=black,dashed,rounded corners=2pt,inner xsep=4pt,inner ysep=6pt]
 \tikzset{every node/.style={font=\tiny}}
 
 % Encoder stack
@@ -54,6 +56,12 @@
 \pic[shift={(1.9,0,0)}] at (decnorm-east) {Box={name=tdout,caption=TimeDist Dense,%
     xlabel={{"n\_targets"}},zlabel=,fill=\OutputColor,height=12,width=1.8,depth=20}};
 \node[at={(tdout-north)},yshift=0.9cm] {\texttt{output}};
+
+% Encoder/Decoder grouping
+\node[groupbox,fit=(enclstm-west)(encnorm-east)(enclstm-north)(encnorm-south)] (encgrp) {};
+\node[above=1pt of encgrp.north] {Encoder};
+\node[groupbox,fit=(repeat-west)(tdout-east)(repeat-north)(tdout-south)] (decgrp) {};
+\node[above=1pt of decgrp.north] {Decoder};
 
 % Main flow
 \draw[flow] (enclstm-east) -- (encdense-west);
