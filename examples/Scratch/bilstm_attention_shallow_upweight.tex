@@ -60,28 +60,24 @@
     fill=\AttentionColor,height=8,width=1.1,depth=10}};
 \pic[shift={(1.5,0,0)}] at (attnpool-east) {Box={name=fused,caption=Fuse concat,%
     xlabel={{"sh+mid+deep+attn"}},fill=\ConcatColor,height=10,width=1.5,depth=12}};
-\pic[shift={(1.4,0,0)}] at (fused-east) {Box={name=fuseddense,caption=Fused Dense+ReLU,%
-    xlabel={{"32"}},fill=\DenseColor,height=10,width=1.4,depth=12}};
-\pic[shift={(1.3,0,0)}] at (fuseddense-east) {Box={name=fusednorm,caption=LayerNorm,%
-    fill=\NormColor,height=9,width=1.1,depth=10}};
+\pic[shift={(1.4,0,0)}] at (fused-east) {Box={name=fusedproj,caption=Fused Dense+Norm,%
+    xlabel={{"32"}},fill=\DenseColor,height=10,width=1.7,depth=12}};
 
 % Decoder
-\pic[shift={(1.4,0,0)}] at (fusednorm-east) {Box={name=repeat,caption=RepeatVector,%
+\pic[shift={(1.4,0,0)}] at (fusedproj-east) {Box={name=repeat,caption=RepeatVector,%
     fill=\RepeatColor,height=8,width=1.1,depth=14}};
 \pic[shift={(1.5,0,0)}] at (repeat-east) {Box={name=decconcat,caption=Concat fut,%
     xlabel={{"dec+fut"}},fill=\ConcatColor,height=10,width=1.2,depth=14}};
 \pic[shift={(1.6,0,0)}] at (decconcat-east) {Box={name=declstm,caption=Decoder LSTM,%
     xlabel={{"64"}},fill=\BiLSTMColor,height=10,width=1.5,depth=14}};
-\pic[shift={(1.5,0,0)}] at (declstm-east) {Box={name=tddense,caption=TimeDist Dense+ReLU,%
-    xlabel={{"32"}},fill=\DenseColor,height=10,width=1.6,depth=14}};
-\pic[shift={(1.3,0,0)}] at (tddense-east) {Box={name=decnorm,caption=LayerNorm,%
-    fill=\NormColor,height=9,width=1.1,depth=12}};
-\pic[shift={(1.5,0,0)}] at (decnorm-east) {Box={name=tdout,caption=TimeDist Dense,%
+\pic[shift={(1.5,0,0)}] at (declstm-east) {Box={name=tdproj,caption=TD Dense+Norm,%
+    xlabel={{"32"}},fill=\DenseColor,height=10,width=1.8,depth=14}};
+\pic[shift={(1.5,0,0)}] at (tdproj-east) {Box={name=tdout,caption=TimeDist Dense,%
     xlabel={{"n\_targets"}},fill=\OutputColor,height=10,width=1.5,depth=14}};
 \node[at={(tdout-north)},yshift=0.9cm] {\texttt{output}};
 
 % Future input + weighted loss
-\pic[shift={(-2.7,-4.5,0)}] at (decconcat-west) {Box={name=futin,caption=fut input,%
+\pic[shift={(-2.2,-4.5,0)}] at (decconcat-west) {Box={name=futin,caption=fut input,%
     xlabel={{"n\_features\_fut"}},fill=\InputColor,height=9,width=1.2,depth=10}};
 \pic[shift={(1.8,0,0)}] at (tdout-east) {Box={name=wloss,caption=Weighted MSE,%
     xlabel={{"shallow x2"}},fill=\LossColor,height=7,width=1.3,depth=8}};
@@ -104,19 +100,17 @@
 \draw[auxflow] (shallowlast-east) -| (fused-northwest);
 \draw[auxflow] (midlast-east) -- (fused-west);
 \draw[auxflow] (deeplast-east) -| (fused-southwest);
-\draw[flow] (fused-east) -- (fuseddense-west);
-\draw[flow] (fuseddense-east) -- (fusednorm-west);
-\draw[flow] (fusednorm-east) -- (repeat-west);
+\draw[flow] (fused-east) -- (fusedproj-west);
+\draw[flow] (fusedproj-east) -- (repeat-west);
 \draw[flow] (repeat-east) -- (decconcat-west);
 \draw[flow] (decconcat-east) -- (declstm-west);
-\draw[flow] (declstm-east) -- (tddense-west);
-\draw[flow] (tddense-east) -- (decnorm-west);
-\draw[flow] (decnorm-east) -- (tdout-west);
+\draw[flow] (declstm-east) -- (tdproj-west);
+\draw[flow] (tdproj-east) -- (tdout-west);
 \draw[flow] (futin-east) -| (decconcat-south);
 \draw[auxflow] (tdout-east) -- (wloss-west);
 
 % Grouping
-\node[groupbox,fit=(encin-west)(fusednorm-east)(shallow-north)(deep-south)] (encgrp) {};
+\node[groupbox,fit=(encin-west)(fusedproj-east)(shallow-north)(deep-south)] (encgrp) {};
 \node[above=1pt of encgrp.north] {Encoder (triple-stream + attention)};
 \node[groupbox,fit=(repeat-west)(tdout-east)(repeat-north)(tdout-south)] (decgrp) {};
 \node[above=1pt of decgrp.north] {Decoder};
