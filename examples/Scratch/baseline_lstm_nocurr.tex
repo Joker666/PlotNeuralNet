@@ -24,17 +24,17 @@
 \pic[shift={(-4.5,3,0)}] {Box={name=enclstm,caption=LSTM,%
     xlabel={{"LSTM\_UNITS"}},zlabel=vector,fill=\LSTMColor,height=15,width=1.8,depth=20}};
 
-\pic[shift={(1.35,0,0)}] at (enclstm-east) {Box={name=encdense,caption=Dense+ReLU,%
+\pic[shift={(1.9,0,0)}] at (enclstm-east) {Box={name=encdense,caption=Dense+ReLU,%
     xlabel={{"DENSE\_UNITS"}},fill=\DenseColor,height=13,width=1.2,depth=16}};
 
-\pic[shift={(1.25,0,0)}] at (encdense-east) {Box={name=encnorm,caption=LayerNorm,%
+\pic[shift={(1.8,0,0)}] at (encdense-east) {Box={name=encnorm,caption=LayerNorm,%
     xlabel={{"norm"}},fill=\NormColor,height=11,width=1.2,depth=14}};
 
 % Decoder entry
-\pic[shift={(1.35,0,0)}] at (encnorm-east) {Box={name=repeat,caption=RepeatVector,%
+\pic[shift={(1.9,0,0)}] at (encnorm-east) {Box={name=repeat,caption=RepeatVector,%
     fill=\RepeatColor,height=10,width=1.2,depth=20}};
 
-\pic[shift={(1.35,0,0)}] at (repeat-east) {Box={name=concat,caption=Concatenate,%
+\pic[shift={(1.9,0,0)}] at (repeat-east) {Box={name=concat,caption=Concatenate,%
     xlabel={{"dec+fut"}},fill=\ConcatColor,height=12,width=1.2,depth=20}};
 
 % Future input branch
@@ -42,16 +42,16 @@
     xlabel={{"n\_features\_fut"}},fill=\InputColor,height=11,width=1.2,depth=11}};
 
 % Decoder stack
-\pic[shift={(1.35,0,0)}] at (concat-east) {Box={name=declstm,caption=LSTM,%
+\pic[shift={(1.9,0,0)}] at (concat-east) {Box={name=declstm,caption=LSTM,%
     xlabel={{"LSTM\_UNITS"}},zlabel=,fill=\LSTMColor,height=13,width=1.8,depth=20}};
 
-\pic[shift={(1.35,0,0)}] at (declstm-east) {Box={name=tddense,caption=TimeDist Dense+ReLU,%
+\pic[shift={(1.9,0,0)}] at (declstm-east) {Box={name=tddense,caption=TimeDist Dense+ReLU,%
     xlabel={{"DENSE\_UNITS"}},fill=\DenseColor,height=12,width=1.8,depth=20}};
 
-\pic[shift={(1.25,0,0)}] at (tddense-east) {Box={name=decnorm,caption=LayerNorm,%
+\pic[shift={(1.8,0,0)}] at (tddense-east) {Box={name=decnorm,caption=LayerNorm,%
     xlabel={{"norm"}},fill=\NormColor,height=11,width=1.2,depth=18}};
 
-\pic[shift={(1.35,0,0)}] at (decnorm-east) {Box={name=tdout,caption=TimeDist Dense,%
+\pic[shift={(1.9,0,0)}] at (decnorm-east) {Box={name=tdout,caption=TimeDist Dense,%
     xlabel={{"n\_targets"}},zlabel=,fill=\OutputColor,height=12,width=1.8,depth=20}};
 \node[at={(tdout-north)},yshift=0.9cm] {\texttt{output}};
 
