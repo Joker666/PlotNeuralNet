@@ -11,6 +11,7 @@
 \def\NormColor{rgb:green,4;blue,1;white,6}
 \def\DropoutColor{rgb:cyan,5;black,4}
 \def\RepeatColor{rgb:orange,4;yellow,3;white,6}
+\def\ConcatColor{rgb:yellow,5;green,2;white,5}
 \def\OutputColor{rgb:red,3;blue,1;white,6}
 
 \begin{document}
@@ -34,7 +35,12 @@
 \pic[shift={(1.8,0,0)}] at (drop-east) {Box={name=repeat,caption=RepeatVector,%
     xlabel={{"n\_steps\_out"}},fill=\RepeatColor,height=10,width=2,depth=20}};
 
-\pic[shift={(2.3,0,0)}] at (repeat-east) {Box={name=tdout,caption=TimeDistributed Dense,%
+\pic[shift={(2.0,0,0)}] at (repeat-east) {Box={name=concat,caption=Concatenate,%
+    xlabel={{"dec+fut"}},fill=\ConcatColor,height=11,width=2,depth=20}};
+\pic[shift={(-3.0,-4.8,0)}] at (concat-west) {Box={name=futin,caption=future input,%
+    xlabel={{"n\_features\_fut"}},fill=\InputColor,height=10,width=1.8,depth=12}};
+
+\pic[shift={(2.1,0,0)}] at (concat-east) {Box={name=tdout,caption=TimeDistributed Dense,%
     xlabel={{"n\_targets"}},fill=\OutputColor,height=12,width=3,depth=20}};
 \node[at={(tdout-north)},yshift=0.95cm] {\texttt{output}};
 
@@ -43,7 +49,9 @@
 \draw[flow] (dense-east) -- (lnorm-west);
 \draw[flow] (lnorm-east) -- (drop-west);
 \draw[flow] (drop-east) -- (repeat-west);
-\draw[flow] (repeat-east) -- (tdout-west);
+\draw[flow] (repeat-east) -- (concat-west);
+\draw[flow] (concat-east) -- (tdout-west);
+\draw[flow] (futin-east) -| (concat-south);
 
 \end{tikzpicture}
 \end{document}
