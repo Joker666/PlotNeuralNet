@@ -16,70 +16,60 @@
 \def\OutputColor{rgb:red,3;blue,1;white,6}
 
 \begin{document}
-\begin{tikzpicture}
+\begin{tikzpicture}[xscale=0.78]
 \tikzstyle{flow}=[ultra thick,->,draw=\edgecolor]
+\tikzset{every node/.style={font=\tiny}}
 
 % Encoder input
-\pic[shift={(-8,3,0)}] {Box={name=encin,caption=enc,%
-    xlabel={{"n\_features\_enc"}},zlabel=n\_steps\_in,fill=\InputColor,height=14,width=2,depth=20}};
+\pic[shift={(-5.8,3,0)}] {Box={name=encin,caption=enc,%
+    xlabel={{"n\_features\_enc"}},zlabel=n\_steps\_in,fill=\InputColor,height=14,width=1.2,depth=20}};
 
 % Encoder stack
-\pic[shift={(1.4,0,0)}] at (encin-east) {Box={name=mask,caption=Masking,%
-    xlabel={{"0.0"}},fill=\MaskColor,height=13,width=2,depth=19}};
+\pic[shift={(1.1,0,0)}] at (encin-east) {Box={name=enclstm,caption=LSTM,%
+    xlabel={{"LSTM\_UNITS"}},zlabel=vector,fill=\LSTMColor,height=15,width=1.8,depth=20}};
 
-\pic[shift={(1.4,0,0)}] at (mask-east) {Box={name=enclstm,caption=LSTM,%
-    xlabel={{"LSTM\_UNITS"}},zlabel=vector,fill=\LSTMColor,height=15,width=3,depth=20}};
+\pic[shift={(1.05,0,0)}] at (enclstm-east) {Box={name=encdense,caption=Dense+ReLU,%
+    xlabel={{"DENSE\_UNITS"}},fill=\DenseColor,height=13,width=1.2,depth=16}};
 
-\pic[shift={(1.2,0,0)}] at (enclstm-east) {Box={name=encdense,caption=Dense+ReLU,%
-    xlabel={{"DENSE\_UNITS"}},fill=\DenseColor,height=13,width=2,depth=16}};
-
-\pic[shift={(1.1,0,0)}] at (encdense-east) {Box={name=encnorm,caption=LayerNorm,%
-    xlabel={{"norm"}},fill=\NormColor,height=11,width=2,depth=14}};
-
-\pic[shift={(1.1,0,0)}] at (encnorm-east) {Box={name=encdrop,caption=Dropout,%
-    xlabel={{"DROPOUT"}},fill=\DropoutColor,height=10,width=2,depth=12}};
+\pic[shift={(0.95,0,0)}] at (encdense-east) {Box={name=encnorm,caption=LayerNorm,%
+    xlabel={{"norm"}},fill=\NormColor,height=11,width=1.2,depth=14}};
 
 % Decoder entry
-\pic[shift={(1.2,0,0)}] at (encdrop-east) {Box={name=repeat,caption=RepeatVector,%
-    xlabel={{"n\_steps\_out"}},fill=\RepeatColor,height=10,width=2,depth=20}};
+\pic[shift={(1.05,0,0)}] at (encnorm-east) {Box={name=repeat,caption=RepeatVector,%
+    xlabel={{"n\_steps\_out"}},fill=\RepeatColor,height=10,width=1.2,depth=20}};
 
-\pic[shift={(1.3,0,0)}] at (repeat-east) {Box={name=concat,caption=Concatenate,%
-    xlabel={{"dec+fut"}},fill=\ConcatColor,height=12,width=2,depth=20}};
+\pic[shift={(1.05,0,0)}] at (repeat-east) {Box={name=concat,caption=Concatenate,%
+    xlabel={{"dec+fut"}},fill=\ConcatColor,height=12,width=1.2,depth=20}};
 
 % Future input branch
-\pic[shift={(0,-6.0,0)}] at (concat-west) {Box={name=futin,caption=fut,%
-    xlabel={{"n\_features\_fut"}},zlabel=n\_steps\_out,fill=\InputColor,height=11,width=2,depth=17}};
+\pic[shift={(-3,-5.0,0)}] at (concat-west) {Box={name=futin,caption=fut,%
+    xlabel={{"n\_features\_fut"}},zlabel=n\_steps\_out,fill=\InputColor,height=11,width=1.2,depth=17}};
 
 % Decoder stack
-\pic[shift={(1.3,0,0)}] at (concat-east) {Box={name=declstm,caption=LSTM,%
-    xlabel={{"LSTM\_UNITS"}},zlabel=n\_steps\_out,fill=\LSTMColor,height=13,width=3,depth=20}};
+\pic[shift={(1.05,0,0)}] at (concat-east) {Box={name=declstm,caption=LSTM,%
+    xlabel={{"LSTM\_UNITS"}},zlabel=n\_steps\_out,fill=\LSTMColor,height=13,width=1.8,depth=20}};
 
-\pic[shift={(1.2,0,0)}] at (declstm-east) {Box={name=tddense,caption=TimeDist Dense+ReLU,%
-    xlabel={{"DENSE\_UNITS"}},fill=\DenseColor,height=12,width=3,depth=20}};
+\pic[shift={(1.05,0,0)}] at (declstm-east) {Box={name=tddense,caption=TimeDist Dense+ReLU,%
+    xlabel={{"DENSE\_UNITS"}},fill=\DenseColor,height=12,width=1.8,depth=20}};
 
-\pic[shift={(1.1,0,0)}] at (tddense-east) {Box={name=decnorm,caption=LayerNorm,%
-    xlabel={{"norm"}},fill=\NormColor,height=11,width=2,depth=18}};
+\pic[shift={(0.95,0,0)}] at (tddense-east) {Box={name=decnorm,caption=LayerNorm,%
+    xlabel={{"norm"}},fill=\NormColor,height=11,width=1.2,depth=18}};
 
-\pic[shift={(1.1,0,0)}] at (decnorm-east) {Box={name=decdrop,caption=Dropout,%
-    xlabel={{"DROPOUT"}},fill=\DropoutColor,height=10,width=2,depth=16}};
-
-\pic[shift={(1.3,0,0)}] at (decdrop-east) {Box={name=tdout,caption=TimeDist Dense,%
-    xlabel={{"n\_targets"}},zlabel=n\_steps\_out,fill=\OutputColor,height=12,width=3,depth=20}};
+\pic[shift={(1.05,0,0)}] at (decnorm-east) {Box={name=tdout,caption=,%
+    xlabel={{"n\_targets"}},zlabel=n\_steps\_out,fill=\OutputColor,height=12,width=1.8,depth=20}};
+\node[at={(tdout-south)},yshift=-10mm] {\textbf{TimeDist Dense}};
 \node[at={(tdout-north)},yshift=0.9cm] {\texttt{output}};
 
 % Main flow
-\draw[flow] (encin-east) -- (mask-west);
-\draw[flow] (mask-east) -- (enclstm-west);
+\draw[flow] (encin-east) -- (enclstm-west);
 \draw[flow] (enclstm-east) -- (encdense-west);
 \draw[flow] (encdense-east) -- (encnorm-west);
-\draw[flow] (encnorm-east) -- (encdrop-west);
-\draw[flow] (encdrop-east) -- (repeat-west);
+\draw[flow] (encnorm-east) -- (repeat-west);
 \draw[flow] (repeat-east) -- (concat-west);
 \draw[flow] (concat-east) -- (declstm-west);
 \draw[flow] (declstm-east) -- (tddense-west);
 \draw[flow] (tddense-east) -- (decnorm-west);
-\draw[flow] (decnorm-east) -- (decdrop-west);
-\draw[flow] (decdrop-east) -- (tdout-west);
+\draw[flow] (decnorm-east) -- (tdout-west);
 
 % Future input merge
 \draw[flow] (futin-east) -| (concat-south);
