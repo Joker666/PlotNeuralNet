@@ -76,7 +76,7 @@
 \node[at={(tdout-north)},yshift=0.9cm] {\texttt{output}};
 
 % Future input branch
-\pic[shift={(-2.8,-4.5,0)}] at (decconcat-west) {Box={name=futin,caption=fut input,%
+\pic[shift={(-2.2,-4.5,0)}] at (decconcat-west) {Box={name=futin,caption=fut,%
     xlabel={{"n\_features\_fut"}},fill=\InputColor,height=9,width=1.2,depth=10}};
 
 % Main flow
@@ -115,7 +115,6 @@
 \node[above=0.35cm of stage2] {Curriculum training};
 \draw[stageflow] (stage1.east) -- node[midway,above] {transfer weights} (stage2.west);
 \draw[stageflow] (stage2.east) -- node[midway,above] {transfer weights} (stage3.west);
-\draw[stageflow] (stage2.south) -- ++(0,-0.55) -| (fuseddense-north);
 
 \end{tikzpicture}
 \end{document}
