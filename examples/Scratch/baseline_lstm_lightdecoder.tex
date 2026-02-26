@@ -17,19 +17,14 @@
 \begin{tikzpicture}
 \tikzstyle{flow}=[ultra thick,->,draw=\edgecolor]
 
-% Inputs
-\node[canvas is zy plane at x=0,draw,minimum width=4.6cm,minimum height=1.6cm,align=center]
-    (enc_input) at (-5,3,0) {Encoder Input\\\texttt{(n\_steps\_in, n\_features\_enc)}};
-\node[above=0.45cm of enc_input] {\texttt{enc}};
-
-% Encoder stack
-\pic[shift={(2.2,0,0)}] at (enc_input) {Box={name=lstm,caption=LSTM,%
+% Encoder stack (starting point adjusted)
+\pic[shift={(-5,3,0)}] {Box={name=lstm,caption=LSTM,%
     xlabel={{"LSTM_UNITS"}},zlabel=vector,fill=\LSTMColor,height=15,width=3,depth=20}};
 
 \pic[shift={(1.8,0,0)}] at (lstm-east) {Box={name=dense,caption=Dense+ReLU,%
     xlabel={{"DENSE_UNITS"}},fill=\DenseColor,height=13,width=2,depth=16}};
 
-\pic[shift={(1.6,0,0)}] at (dense-east) {Box={name=lnorm,caption=LayerNorm,%
+\pic[shift={(2.0,0,0)}] at (dense-east) {Box={name=lnorm,caption=LayerNorm,%
     xlabel={{"norm"}},fill=\NormColor,height=11,width=2,depth=14}};
 
 \pic[shift={(1.6,0,0)}] at (lnorm-east) {Box={name=drop,caption=Dropout,%
@@ -39,12 +34,11 @@
 \pic[shift={(1.8,0,0)}] at (drop-east) {Box={name=repeat,caption=RepeatVector,%
     xlabel={{"n\_steps\_out"}},fill=\RepeatColor,height=10,width=2,depth=20}};
 
-\pic[shift={(2.2,0,0)}] at (repeat-east) {Box={name=tdout,caption=TimeDistributed Dense,%
-    xlabel={{"n\_targets"}},zlabel=n\_steps\_out,fill=\OutputColor,height=12,width=2,depth=20}};
-\node[at={(tdout-north)},yshift=0.45cm] {\texttt{output}};
+\pic[shift={(2.3,0,0)}] at (repeat-east) {Box={name=tdout,caption=TimeDistributed Dense,%
+    xlabel={{"n\_targets"}},fill=\OutputColor,height=12,width=3,depth=20}};
+\node[at={(tdout-north)},yshift=0.95cm] {\texttt{output}};
 
 % Main flow
-\draw[flow] (enc_input) -- (lstm-west);
 \draw[flow] (lstm-east) -- (dense-west);
 \draw[flow] (dense-east) -- (lnorm-west);
 \draw[flow] (lnorm-east) -- (drop-west);
