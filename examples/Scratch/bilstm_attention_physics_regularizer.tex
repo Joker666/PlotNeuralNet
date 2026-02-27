@@ -103,5 +103,8 @@
     \draw[stageflow] (stage1.east) -- node[midway,above] {transfer weights} (stage2.west);
     \draw[stageflow] (stage2.east) -- node[midway,above] {transfer weights} (stage3.west);
 
+    % Add extra padding to the right to prevent PhysicsRegularizer text from being cut off
+    \path (physreg-east) ++(1.5,0);
+
 \end{tikzpicture}
 \end{document}
