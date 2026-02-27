@@ -68,7 +68,7 @@
                 xlabel={{"lambda\_phys=0.1"}},fill=\PhysColor,height=7,width=1.6,depth=9}};
 
     % Future input
-    \pic[shift={(-2.7,-4.5,0)}] at (decconcat-west) {Box={name=futin,caption=fut input,%
+    \pic[shift={(-2.7,-4.5,0)}] at (decconcat-west) {Box={name=futin,caption=future input,%
                 xlabel={{"n\_features\_fut"}},fill=\InputColor,height=9,width=1.2,depth=10}};
 
     % Flows
@@ -92,7 +92,7 @@
     % Grouping
     \node[groupbox,fit=(encin-west)(fusedproj-east)(streams-north)(streams-south)] (encgrp) {};
     \node[above=1pt of encgrp.north] {Encoder (triple-stream + attention)};
-    \node[groupbox,fit=(repeat-west)(physreg-east)(wmse-north)(physreg-south)] (decgrp) {};
+    \node[groupbox, inner ysep=15pt,fit=(repeat-west)(physreg-east)(wmse-north)(physreg-south)] (decgrp) {};
     \node[above=1pt of decgrp.north] {Decoder + physics penalty hook};
 
     % Curriculum + frozen warmup
