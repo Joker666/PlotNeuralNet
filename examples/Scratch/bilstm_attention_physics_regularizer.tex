@@ -95,12 +95,11 @@
     \node[groupbox,fit=(repeat-west)(physreg-east)(wmse-north)(physreg-south)] (decgrp) {};
     \node[above=1pt of decgrp.north] {Decoder + physics penalty hook};
 
-    % Curriculum (top lane only)
+    % Curriculum + frozen warmup
     \node[stagebox, above=2.0cm of encgrp.north west, anchor=west] (stage1) {Stage 1\\1-day};
-    \node[stagebox, right=1.8cm of stage1] (stage2) {Stage 2\\3-day};
-    \node[stagebox, right=1.8cm of stage2] (stage3) {Stage 3\\7-day};
+    \node[stagebox, right=1.8cm of stage1] (stage2) {Stage 2\\3-day + encoder freeze warmup};
+    \node[stagebox, right=1.8cm of stage2] (stage3) {Stage 3\\7-day + encoder freeze warmup};
     \node[above=0.35cm of stage2] {Curriculum training};
-    \node[below=3pt of stage2] {model-wide transfer; stage2/3 include frozen-encoder warmup};
     \draw[stageflow] (stage1.east) -- node[midway,above] {transfer weights} (stage2.west);
     \draw[stageflow] (stage2.east) -- node[midway,above] {transfer weights} (stage3.west);
 
