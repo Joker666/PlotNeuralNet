@@ -78,8 +78,8 @@
 
 % Curriculum-learning stages (same architecture, progressive horizon)
 \node[stagebox, above=2.0cm of enclstm-north] (stage1) {Stage 1\\1-day horizon};
-\node[stagebox, right=1.7cm of stage1] (stage2) {Stage 2\\3-day horizon};
-\node[stagebox, right=1.7cm of stage2] (stage3) {Stage 3\\7-day horizon};
+\node[stagebox, right=1.8cm of stage1] (stage2) {Stage 2\\3-day horizon};
+\node[stagebox, right=1.8cm of stage2] (stage3) {Stage 3\\7-day horizon};
 \node[above=0.35cm of stage2] {Curriculum learning};
 
 \draw[stageflow] (stage1.east) -- node[midway,above] {transfer weights} (stage2.west);

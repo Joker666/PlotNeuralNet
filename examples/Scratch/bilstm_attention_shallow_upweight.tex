@@ -54,7 +54,7 @@
 \pic[shift={(1.4,0,0)}] at (deepbilstm-east) {Box={name=deeplast,caption=Last state,%
     fill=\NormColor,height=7,width=0.9,depth=10}};
 
-\pic[shift={(1.7,0,0)}] at (midlast-east) {Box={name=attn,caption=Cross-depth MHA,%
+\pic[shift={(1.7,0,0)}] at (midlast-east) {Box={name=attn,caption=Cross-depth Attention,%
     xlabel={{"heads=2"}},fill=\AttentionColor,height=10,width=1.5,depth=12}};
 \pic[shift={(1.5,0,0)}] at (attn-east) {Box={name=attnpool,caption=Attn pool,%
     fill=\AttentionColor,height=8,width=1.1,depth=10}};
@@ -66,7 +66,7 @@
 % Decoder
 \pic[shift={(1.4,0,0)}] at (fusedproj-east) {Box={name=repeat,caption=RepeatVector,%
     fill=\RepeatColor,height=8,width=1.1,depth=14}};
-\pic[shift={(1.5,0,0)}] at (repeat-east) {Box={name=decconcat,caption=Concat fut,%
+\pic[shift={(1.5,0,0)}] at (repeat-east) {Box={name=decconcat,caption=Concat,%
     xlabel={{"dec+fut"}},fill=\ConcatColor,height=10,width=1.2,depth=14}};
 \pic[shift={(1.6,0,0)}] at (decconcat-east) {Box={name=declstm,caption=Decoder LSTM,%
     xlabel={{"64"}},fill=\BiLSTMColor,height=10,width=1.5,depth=14}};
@@ -115,7 +115,6 @@
 \node[groupbox,fit=(repeat-west)(tdout-east)(repeat-north)(tdout-south)] (decgrp) {};
 \node[above=1pt of decgrp.north] {Decoder};
 
-% Curriculum (top lane only)
 % Curriculum + frozen warmup
 \node[stagebox, above=2.0cm of encgrp.north west, anchor=west] (stage1) {Stage 1\\1-day};
 \node[stagebox, right=1.8cm of stage1] (stage2) {Stage 2\\3-day + encoder freeze warmup};

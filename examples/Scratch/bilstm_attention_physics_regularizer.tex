@@ -39,7 +39,7 @@
                 xlabel={{"128"}},fill=\BiLSTMColor,height=11,width=1.6,depth=14}};
     \pic[shift={(1.4,0,0)}] at (encbilstm-east) {Box={name=enclast,caption=3x Last state,%
                 fill=\NormColor,height=8,width=1.2,depth=10}};
-    \pic[shift={(1.6,0,0)}] at (enclast-east) {Box={name=attn,caption=Cross-depth MHA,%
+    \pic[shift={(1.6,0,0)}] at (enclast-east) {Box={name=attn,caption=Cross-depth Attention,%
                 xlabel={{"heads=2"}},fill=\AttentionColor,height=10,width=1.5,depth=12}};
     \pic[shift={(1.5,0,0)}] at (attn-east) {Box={name=attnpool,caption=Attn pool,%
                 fill=\AttentionColor,height=8,width=1.1,depth=10}};
@@ -51,11 +51,11 @@
     % Decoder
     \pic[shift={(1.4,0,0)}] at (fusedproj-east) {Box={name=repeat,caption=RepeatVector,%
                 fill=\RepeatColor,height=8,width=1.1,depth=14}};
-    \pic[shift={(1.5,0,0)}] at (repeat-east) {Box={name=decconcat,caption=Concat fut,%
+    \pic[shift={(1.5,0,0)}] at (repeat-east) {Box={name=decconcat,caption=Concat,%
                 xlabel={{"dec+fut"}},fill=\ConcatColor,height=10,width=1.2,depth=14}};
     \pic[shift={(1.6,0,0)}] at (decconcat-east) {Box={name=declstm,caption=Decoder LSTM,%
                 xlabel={{"128"}},fill=\BiLSTMColor,height=10,width=1.5,depth=14}};
-    \pic[shift={(1.5,0,0)}] at (declstm-east) {Box={name=tdproj,caption=TD Dense+Norm,%
+    \pic[shift={(1.5,0,0)}] at (declstm-east) {Box={name=tdproj,caption=TimeDist Dense+Norm,%
                 xlabel={{"32"}},fill=\DenseColor,height=10,width=1.8,depth=14}};
     \pic[shift={(1.5,0,0)}] at (tdproj-east) {Box={name=tdout,caption=TimeDist Dense,%
                 xlabel={{"n\_targets"}},fill=\OutputColor,height=10,width=1.5,depth=14}};
